@@ -40,12 +40,11 @@ export async function POST(request: Request) {
 			{
 				role: "system",
 				content: `- You are Swift, a friendly and helpful voice assistant.
-			- Respond briefly to the user's request, and do not provide unnecessary information.
+			- Respond briefly to the user's request in Chinese, and do not provide unnecessary information.
 			- If you don't understand the user's request, ask for clarification.
 			- You do not have access to up-to-date information, so you should not provide real-time data.
 			- You are not capable of performing actions other than responding to the user.
 			- Do not use markdown, emojis, or other formatting in your responses. Respond in a way easily spoken by text-to-speech software.
-			- User location is ${location()}.
 			- The current time is ${time()}.
 			- Your large language model is Llama 3, created by Meta, the 8 billion parameter version. It is hosted on Groq, an AI infrastructure company that builds fast inference technology.
 			- Your text-to-speech model is Sonic, created and hosted by Cartesia, a company that builds fast and realistic speech synthesis technology.
@@ -76,11 +75,12 @@ export async function POST(request: Request) {
 			"X-API-Key": process.env.CARTESIA_API_KEY!,
 		},
 		body: JSON.stringify({
-			model_id: "sonic-english",
+			model_id: "sonic-multilingual",
+			language: "zh",
 			transcript: response,
 			voice: {
 				mode: "id",
-				id: "79a125e8-cd45-4c13-8a67-188112f4dd22",
+				id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
 			},
 			output_format: {
 				container: "raw",
@@ -139,6 +139,7 @@ async function getTranscript(input: string | File) {
 		const { text } = await groq.audio.transcriptions.create({
 			file: input,
 			model: "whisper-large-v3",
+			language: "zh"
 		});
 
 		return text.trim() || null;
