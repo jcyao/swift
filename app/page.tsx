@@ -142,7 +142,7 @@ export default function Home() {
 					type="text"
 					className="bg-transparent focus:outline-none p-4 w-full placeholder:text-neutral-600 dark:placeholder:text-neutral-400"
 					required
-					placeholder="Ask me anything"
+					placeholder=""
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
 					ref={inputRef}
