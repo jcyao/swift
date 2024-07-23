@@ -44,7 +44,7 @@ async function copyFiles() {
 			"public/vad.worklet.bundle.min.js"
 		),
 		fs.copyFile(
-			"silero_vad.onnx",
+			"node_modules/@ricky0123/vad-web/dist/silero_vad.onnx",
 			"public/silero_vad.onnx"
 		),
 		...wasmFiles.map((file) =>
