@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 				content: `- 你是一个友好的语音助手，名叫'小东'。
 	- 用中文回复user的提问，不要提供多余信息。
 	- 如果你没听明白用户的提问，请通过向用户提问来明确。
-	- 请使用容易说出来的文本回答。
+	- 请使用口语化的文本回答。
 	- 现在的时间是 ${time()}.`,
 			},
 			...data.message,
@@ -122,7 +122,7 @@ function location() {
 }
 
 function time() {
-	return new Date().toLocaleString("en-US", {
+	return new Date().toLocaleString("zh", {
 		timeZone: headers().get("x-vercel-ip-timezone") || undefined,
 	});
 }

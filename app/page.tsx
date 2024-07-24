@@ -32,8 +32,8 @@ export default function Home() {
 		},
 		workletURL: "/vad.worklet.bundle.min.js",
 		modelURL: "/silero_vad.onnx",
-		positiveSpeechThreshold: 0.6,
-		minSpeechFrames: 4,
+		positiveSpeechThreshold: 0.7,
+		minSpeechFrames: 6,
 		ortConfig(ort) {
 			const isSafari = /^((?!chrome|android).)*safari/i.test(
 				navigator.userAgent
@@ -98,7 +98,9 @@ export default function Home() {
 			if (response.status === 429) {
 				toast.error("Too many requests. Please try again later.");
 			} else {
-				toast.error((await response.text()) || "An error occurred.");
+				if (transcript) {
+					toast.error((await response.text()) || "An error occurred.");
+				}
 			}
 
 			return prevMessages;
