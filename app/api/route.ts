@@ -35,12 +35,12 @@ export async function POST(request: Request) {
 	);
 
 	const completion = await groq.chat.completions.create({
-		model: "llama3-8b-8192",
+		model: "llama-3.1-8b-instant",
 		messages: [
 			{
 				role: "system",
-				content: `- 你是一个友好的语音助手，名叫'小东'。
-	- 用中文回复user的提问，不要提供多余信息。
+				content: `- 你是一个友好的AI语音助手，名叫[小东]。
+	- 用中文简短地回复user的提问，不要提供多余信息。
 	- 如果你没听明白用户的提问，请通过向用户提问来明确。
 	- 请使用口语化的文本回答。
 	- 现在的时间是 ${time()}.`,
@@ -122,7 +122,7 @@ function location() {
 }
 
 function time() {
-	return new Date().toLocaleString("zh", {
+	return new Date().toLocaleString("en-US", {
 		timeZone: headers().get("x-vercel-ip-timezone") || undefined,
 	});
 }
