@@ -33,7 +33,7 @@ export default function Home() {
 		workletURL: "/vad.worklet.bundle.min.js",
 		modelURL: "/silero_vad.onnx",
 		positiveSpeechThreshold: 0.7,
-		minSpeechFrames: 6,
+		minSpeechFrames: 4,
 		ortConfig(ort) {
 			const isSafari = /^((?!chrome|android).)*safari/i.test(
 				navigator.userAgent
