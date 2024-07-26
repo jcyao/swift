@@ -70,28 +70,30 @@ export async function POST(request: Request) {
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
 	);
 
-	const voice = await fetch("https://api.cartesia.ai/tts/bytes", {
-		method: "POST",
-		headers: {
-			"Cartesia-Version": "2024-06-30",
-			"Content-Type": "application/json",
-			"X-API-Key": process.env.CARTESIA_API_KEY!,
-		},
-		body: JSON.stringify({
-			model_id: "sonic-multilingual",
-			language: "zh",
-			transcript: response,
-			voice: {
-				mode: "id",
-				id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
-			},
-			output_format: {
-				container: "raw",
-				encoding: "pcm_f32le",
-				sample_rate: 24000,
-			},
-		}),
-	});
+	const voice = "";
+
+	// const voice = await fetch("https://api.cartesia.ai/tts/bytes", {
+	// 	method: "POST",
+	// 	headers: {
+	// 		"Cartesia-Version": "2024-06-30",
+	// 		"Content-Type": "application/json",
+	// 		"X-API-Key": process.env.CARTESIA_API_KEY!,
+	// 	},
+	// 	body: JSON.stringify({
+	// 		model_id: "sonic-multilingual",
+	// 		language: "zh",
+	// 		transcript: response,
+	// 		voice: {
+	// 			mode: "id",
+	// 			id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
+	// 		},
+	// 		output_format: {
+	// 			container: "raw",
+	// 			encoding: "pcm_f32le",
+	// 			sample_rate: 24000,
+	// 		},
+	// 	}),
+	// });
 
 	console.timeEnd(
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
