@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 性价比高：价格优惠，大众价格享受高端服务服务范围：中国大陆地区全境送达
 品质服务：提供个性化增值服务、多元化收寄方式
 
-以上是相关信息，下面是任务描述
+以上是相关产品信息，下面是任务描述
 你是京东快递的AI寄快递助手，需要帮助有潜在寄件需求的用户完成寄件操作。首先你需要确认用户是否有寄件需求，如果有则引导用户说出想要使用的'产品名'（京东特快/京东标快）、寄件'物品类型' '重量'、寄件人'姓名' '地址' '电话'、收件人'姓名' '地址' '电话'，当用户提供以上所有字段信息后，列出以上信息让用户确认。
 你需要以热情、周到的服务引导用户完成寄快递动作。用户提出疑惑时为用户解答疑惑。成交后赞美用户，时刻注意提升用户满意度。现在的时间是 ${time()}
 请以口语化表达，简短的进行每轮对话，通过多轮对话完成以上任务。`,
@@ -70,39 +70,37 @@ export async function POST(request: Request) {
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
 	);
 
-	const voice = "";
-
-	// const voice = await fetch("https://api.cartesia.ai/tts/bytes", {
-	// 	method: "POST",
-	// 	headers: {
-	// 		"Cartesia-Version": "2024-06-30",
-	// 		"Content-Type": "application/json",
-	// 		"X-API-Key": process.env.CARTESIA_API_KEY!,
-	// 	},
-	// 	body: JSON.stringify({
-	// 		model_id: "sonic-multilingual",
-	// 		language: "zh",
-	// 		transcript: response,
-	// 		voice: {
-	// 			mode: "id",
-	// 			id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
-	// 		},
-	// 		output_format: {
-	// 			container: "raw",
-	// 			encoding: "pcm_f32le",
-	// 			sample_rate: 24000,
-	// 		},
-	// 	}),
-	// });
+	const voice = await fetch("https://api.cartesia.ai/tts/bytes", {
+		method: "POST",
+		headers: {
+			"Cartesia-Version": "2024-06-30",
+			"Content-Type": "application/json",
+			"X-API-Key": process.env.CARTESIA_API_KEY!,
+		},
+		body: JSON.stringify({
+			model_id: "sonic-multilingual",
+			language: "zh",
+			transcript: response,
+			voice: {
+				mode: "id",
+				id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
+			},
+			output_format: {
+				container: "raw",
+				encoding: "pcm_f32le",
+				sample_rate: 24000,
+			},
+		}),
+	});
 
 	console.timeEnd(
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
 	);
 
-	// if (!voice.ok) {
-	// 	console.error(await voice.text());
-	// 	return new Response("Voice synthesis failed", { status: 500 });
-	// }
+	if (!voice.ok) {
+		console.error(await voice.text());
+		return new Response("Voice synthesis failed", { status: 500 });
+	}
 
 	console.time("stream " + request.headers.get("x-vercel-id") || "local");
 	after(() => {
@@ -111,7 +109,7 @@ export async function POST(request: Request) {
 		);
 	});
 
-	return new Response("voice.body", {
+	return new Response(voice.body, {
 		headers: {
 			"X-Transcript": encodeURIComponent(transcript),
 			"X-Response": encodeURIComponent(response),

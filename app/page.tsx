@@ -107,10 +107,10 @@ export default function Home() {
 		}
 
 		const latency = Date.now() - submittedAt;
-		// player.play(response.body, () => {
-		// 	const isFirefox = navigator.userAgent.includes("Firefox");
-		// 	if (isFirefox) vad.start();
-		// });
+		player.play(response.body, () => {
+			const isFirefox = navigator.userAgent.includes("Firefox");
+			if (isFirefox) vad.start();
+		});
 		setInput(transcript);
 
 		return [
