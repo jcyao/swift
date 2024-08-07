@@ -20,18 +20,23 @@ export function usePlayer() {
 			data.set(leftover);
 			data.set(result.value, leftover.length);
 
-			const length = Math.floor(data.length / 4) * 4;
-			const remainder = data.length % 4;
-			const buffer = new Float32Array(data.buffer, 0, length / 4);
+			const length = Math.floor(data.length / 2) * 2;
+			const remainder = data.length % 2;
+			const buffer = new Int16Array(data.buffer, 0, length / 2);
 
 			leftover = new Uint8Array(data.buffer, length, remainder);
 
+			const buffer32 = new Float32Array(buffer.length);
+			for (let i = 0; i < buffer.length; i++) {
+				buffer32[i] = buffer[i] / 32767.0;
+			}
+
 			const audioBuffer = audioContext.current.createBuffer(
 				1,
-				buffer.length,
+				buffer32.length,
 				audioContext.current.sampleRate
 			);
-			audioBuffer.copyToChannel(buffer, 0);
+			audioBuffer.copyToChannel(buffer32, 0);
 
 			source.current = audioContext.current.createBufferSource();
 			source.current.buffer = audioBuffer;

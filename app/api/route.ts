@@ -87,7 +87,7 @@ export async function POST(request: Request) {
 			},
 			output_format: {
 				container: "raw",
-				encoding: "pcm_f32le",
+				encoding: "pcm_s16le",
 				sample_rate: 24000,
 			},
 		}),
