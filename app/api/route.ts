@@ -78,20 +78,24 @@ export async function POST(request: Request) {
 		},
 	});
 
+	console.log("tts_token", tts_token);
+
 	const voice = await fetch("https://japanwest.tts.speech.microsoft.com/cognitiveservices/v1", {
 		method: "POST",
 		headers: {
 			"X-Microsoft-OutputFormat": "raw-24khz-16bit-mono-pcm",
 			"Content-Type": "application/ssml+xml",
-			"Authorization": "Bearer " + tts_token,
+			"Authorization": `Bearer ${tts_token}`,
 			"User-Agent": "1",
 		},
 		body: `<speak version='1.0' xml:lang='en-US'>
     <voice name="zh-CN-XiaoxiaoNeural">
-        ` + response + `
+	${response}
     </voice>
 </speak>`
 	});
+
+
 
 	// const voice1 = await fetch("https://api.cartesia.ai/tts/bytes", {
 	// 	method: "POST",
