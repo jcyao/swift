@@ -70,28 +70,51 @@ export async function POST(request: Request) {
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
 	);
 
-	const voice = await fetch("https://api.cartesia.ai/tts/bytes", {
+	const tts_token = await fetch("https://japanwest.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
 		method: "POST",
 		headers: {
-			"Cartesia-Version": "2024-06-30",
-			"Content-Type": "application/json",
-			"X-API-Key": process.env.CARTESIA_API_KEY!,
+			"Content-Type": "application/x-www-form-urlencoded",
+			"Ocp-Apim-Subscription-Key": "7308761dbf1a410dab9628dde0f603e8",
 		},
-		body: JSON.stringify({
-			model_id: "sonic-multilingual",
-			language: "zh",
-			transcript: response,
-			voice: {
-				mode: "id",
-				id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
-			},
-			output_format: {
-				container: "raw",
-				encoding: "pcm_f32le",
-				sample_rate: 24000,
-			},
-		}),
 	});
+
+	const voice = await fetch("https://japanwest.tts.speech.microsoft.com/cognitiveservices/v1", {
+		method: "POST",
+		headers: {
+			"X-Microsoft-OutputFormat": "raw-24khz-16bit-mono-pcm",
+			"Content-Type": "application/ssml+xml",
+			"Authorization": "Bearer " + tts_token,
+			"User-Agent": "1",
+		},
+		body: `<speak version='1.0' xml:lang='en-US'>
+    <voice name="zh-CN-XiaoxiaoNeural">
+        ` + response + `
+    </voice>
+</speak>`
+	});
+
+	// const voice1 = await fetch("https://api.cartesia.ai/tts/bytes", {
+	// 	method: "POST",
+	// 	headers: {
+	// 		"Cartesia-Version": "2024-06-30",
+	// 		"Content-Type": "application/json",
+	// 		"X-API-Key": process.env.CARTESIA_API_KEY!,
+	// 	},
+	// 	body: JSON.stringify({
+	// 		model_id: "sonic-multilingual",
+	// 		language: "zh",
+	// 		transcript: response,
+	// 		voice: {
+	// 			mode: "id",
+	// 			id: "3a63e2d1-1c1e-425d-8e79-5100bc910e90",
+	// 		},
+	// 		output_format: {
+	// 			container: "raw",
+	// 			encoding: "pcm_f32le",
+	// 			sample_rate: 24000,
+	// 		},
+	// 	}),
+	// });
 
 	console.timeEnd(
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
