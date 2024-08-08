@@ -70,7 +70,7 @@ export async function POST(request: Request) {
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
 	);
 
-	const tts_token = fetch("https://japanwest.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
+	const tts_token = await fetch("https://japanwest.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
         headers: {
             "X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
             "Content-Type": "application/ssml+xml",
-            "Authorization": `Bearer ${tts_token}`,
+            "Authorization": `Bearer ${await tts_token.text()}`,
             "User-Agent": "1",
         },
         body: `<speak version='1.0' xml:lang='en-US'>
