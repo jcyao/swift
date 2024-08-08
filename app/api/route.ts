@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 	);
 
 	const completion = await groq.chat.completions.create({
-		model: "gemma2-9b-it",
+		model: "mixtral-8x7b-32768",
 		messages: [
 			{
 				role: "system",
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
 	const voice = await fetch("https://westus.tts.speech.microsoft.com/cognitiveservices/v1", {
         method: "POST",
         headers: {
-            "X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
+            "X-Microsoft-OutputFormat": "raw-16khz-16bit-mono-pcm",
             "Content-Type": "application/ssml+xml",
             "Authorization": `Bearer ${tts_token_str}`,
             "User-Agent": "1",

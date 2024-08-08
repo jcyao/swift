@@ -7,7 +7,7 @@ export function usePlayer() {
 
 	async function play(stream: ReadableStream, callback: () => void) {
 		stop();
-		audioContext.current = new AudioContext({ sampleRate: 8000 });
+		audioContext.current = new AudioContext({ sampleRate: 16000 });
 
 		let nextStartTime = audioContext.current.currentTime;
 		const reader = stream.getReader();
