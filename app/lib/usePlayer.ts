@@ -20,11 +20,11 @@ export function usePlayer() {
 			data.set(leftover);
 			data.set(result.value, leftover.length);
 
-			const length = Math.floor(data.length / 2) * 2;
+			const length = Math.floor(data.length / 2);
 			const remainder = data.length % 2;
-			const buffer = new Int16Array(data.buffer, 0, length / 2);
+			const buffer = new Int16Array(data.buffer, 0, length);
 
-			leftover = new Uint8Array(data.buffer, length, remainder);
+			leftover = new Uint8Array(data.buffer, length * 2, remainder);
 
 			const buffer32 = new Float32Array(buffer.length);
 			for (let i = 0; i < buffer.length; i++) {
