@@ -28,7 +28,7 @@ export function usePlayer() {
 
 			const buffer32 = new Float32Array(buffer.length);
 			for (let i = 0; i < buffer.length; i++) {
-				buffer32[i] = buffer[i] / 32767.0;
+				buffer32[i] = buffer[i] / 32768.0;
 			}
 
 			const audioBuffer = audioContext.current.createBuffer(
