@@ -18,14 +18,6 @@ const schema = zfd.formData({
 	),
 });
 
-const tts_token = fetch("https://japanwest.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
-	method: "POST",
-	headers: {
-		"Content-Type": "application/x-www-form-urlencoded",
-		"Ocp-Apim-Subscription-Key": "7308761dbf1a410dab9628dde0f603e8",
-	},
-});
-
 export async function POST(request: Request) {
 	console.time("transcribe " + request.headers.get("x-vercel-id") || "local");
 
@@ -78,10 +70,18 @@ export async function POST(request: Request) {
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
 	);
 
+	const tts_token = fetch("https://japanwest.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+			"Ocp-Apim-Subscription-Key": "7308761dbf1a410dab9628dde0f603e8",
+		},
+	});
+
 	const voice = await fetch("https://japanwest.tts.speech.microsoft.com/cognitiveservices/v1", {
         method: "POST",
         headers: {
-            "X-Microsoft-OutputFormat": "raw-24khz-16bit-mono-pcm",
+            "X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
             "Content-Type": "application/ssml+xml",
             "Authorization": `Bearer ${tts_token}`,
             "User-Agent": "1",
