@@ -132,9 +132,7 @@ function location() {
 }
 
 function time() {
-	return new Date().toLocaleString("en-US", {
-		timeZone: headers().get("x-vercel-ip-timezone") || undefined,
-	});
+	return new Date().toLocaleString("zh-CN");
 }
 
 async function getTranscript(input: string | File) {
