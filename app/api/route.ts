@@ -18,15 +18,13 @@ const schema = zfd.formData({
 	),
 });
 
-const tts_token = await fetch("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
+let tts_token_str = await (await fetch("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
 	method: "POST",
 	headers: {
 		"Content-Type": "application/x-www-form-urlencoded",
 		"Ocp-Apim-Subscription-Key": "8bf26016579f4de3b61e13600c17b10c",
 	},
-});
-
-const tts_token_str = await tts_token.text();
+})).text();
 
 export async function POST(request: Request) {
 	console.time("transcribe " + request.headers.get("x-vercel-id") || "local");
@@ -59,9 +57,10 @@ export async function POST(request: Request) {
 品质服务：提供个性化增值服务、多元化收寄方式
 
 以上是相关产品信息，下面是任务描述
+
 你是京东快递的AI寄快递助手名叫'小东'，需要帮助有潜在寄件需求的用户完成寄件下单。首先你需要确认用户是否有寄件需求，如果有则引导用户说出想要使用的'产品名'（京东特快/京东标快）、寄件'物品类型' '重量'、寄件人'姓名' '地址' '电话'、收件人'姓名' '地址' '电话'，当用户提供以上所有字段信息后，列出以上信息让用户确认。
-你需要以热情、周到的服务引导用户完成寄快递动作。用户提出疑惑时为用户解答疑惑。成交后赞美用户，时刻注意提升用户满意度。现在的时间是 ${time()}
-请以口语化表达，尽量简短的回复进行每轮对话，通过多轮对话完成以上任务。`,
+你需要以热情、周到的服务引导用户完成寄快递动作。用户提出疑惑时为用户解答疑惑。请时刻注意提升用户满意度。当前位置在北京市，时间是 ${time()}
+请以口语化表达回复，不要出现表情或其他书面符号，每轮回复保持在两句话以内，通过多轮对话完成以上任务。`,
 			},
 			...data.message,
 			{
@@ -83,7 +82,7 @@ export async function POST(request: Request) {
 	const voice = await fetch("https://westus.tts.speech.microsoft.com/cognitiveservices/v1", {
         method: "POST",
         headers: {
-            "X-Microsoft-OutputFormat": "raw-16khz-16bit-mono-pcm",
+            "X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
             "Content-Type": "application/ssml+xml",
             "Authorization": `Bearer ${tts_token_str}`,
             "User-Agent": "1",
@@ -94,6 +93,31 @@ export async function POST(request: Request) {
     </voice>
 </speak>`
     });
+
+	if (voice.status === 401) {
+		tts_token_str = await (await fetch("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Ocp-Apim-Subscription-Key": "8bf26016579f4de3b61e13600c17b10c",
+			},
+		})).text();
+
+		const voice = await fetch("https://westus.tts.speech.microsoft.com/cognitiveservices/v1", {
+			method: "POST",
+			headers: {
+				"X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
+				"Content-Type": "application/ssml+xml",
+				"Authorization": `Bearer ${tts_token_str}`,
+				"User-Agent": "1",
+			},
+			body: `<speak version='1.0' xml:lang='en-US'>
+		<voice name="zh-CN-YunxiNeural">
+		${response}
+		</voice>
+	</speak>`
+		});
+	}
 
 	console.timeEnd(
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
