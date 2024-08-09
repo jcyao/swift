@@ -14,6 +14,14 @@ type Message = {
 	latency?: number;
 };
 
+const tts_token_str = await (await fetch("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
+	method: "POST",
+	headers: {
+		"Content-Type": "application/x-www-form-urlencoded",
+		"Ocp-Apim-Subscription-Key": "8bf26016579f4de3b61e13600c17b10c",
+	},
+})).text();
+
 export default function Home() {
 	const [input, setInput] = useState("");
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -84,6 +92,9 @@ export default function Home() {
 
 		const response = await fetch("/api", {
 			method: "POST",
+			headers: {
+				"tts-token": tts_token_str,
+			},
 			body: formData,
 		});
 

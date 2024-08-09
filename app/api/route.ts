@@ -18,16 +18,10 @@ const schema = zfd.formData({
 	),
 });
 
-let tts_token_str = await (await fetch("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
-	method: "POST",
-	headers: {
-		"Content-Type": "application/x-www-form-urlencoded",
-		"Ocp-Apim-Subscription-Key": "8bf26016579f4de3b61e13600c17b10c",
-	},
-})).text();
-
 export async function POST(request: Request) {
 	console.time("transcribe " + request.headers.get("x-vercel-id") || "local");
+
+	const tts_token = request.headers.get("tts-token") || "empty";
 
 	const { data, success } = schema.safeParse(await request.formData());
 	if (!success) return new Response("Invalid request", { status: 400 });
@@ -84,7 +78,7 @@ export async function POST(request: Request) {
         headers: {
             "X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
             "Content-Type": "application/ssml+xml",
-            "Authorization": `Bearer ${tts_token_str}`,
+            "Authorization": `Bearer ${tts_token}`,
             "User-Agent": "1",
         },
         body: `<speak version='1.0' xml:lang='en-US'>
@@ -93,31 +87,6 @@ export async function POST(request: Request) {
     </voice>
 </speak>`
     });
-
-	if (voice.status === 401) {
-		tts_token_str = await (await fetch("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-				"Ocp-Apim-Subscription-Key": "8bf26016579f4de3b61e13600c17b10c",
-			},
-		})).text();
-
-		const voice = await fetch("https://westus.tts.speech.microsoft.com/cognitiveservices/v1", {
-			method: "POST",
-			headers: {
-				"X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
-				"Content-Type": "application/ssml+xml",
-				"Authorization": `Bearer ${tts_token_str}`,
-				"User-Agent": "1",
-			},
-			body: `<speak version='1.0' xml:lang='en-US'>
-		<voice name="zh-CN-YunxiNeural">
-		${response}
-		</voice>
-	</speak>`
-		});
-	}
 
 	console.timeEnd(
 		"cartesia request " + request.headers.get("x-vercel-id") || "local"
