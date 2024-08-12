@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 	);
 
 	const completion = await groq.chat.completions.create({
-		model: "llama3-70b-8192",
+		model: "gemma2-9b-it",
 		messages: [
 			{
 				role: "system",
