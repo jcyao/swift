@@ -74,14 +74,16 @@ export async function POST(request: Request) {
 	const voice = await fetch("https://westus.tts.speech.microsoft.com/cognitiveservices/v1", {
         method: "POST",
         headers: {
-            "X-Microsoft-OutputFormat": "raw-8khz-16bit-mono-pcm",
+            "X-Microsoft-OutputFormat": "raw-16khz-16bit-mono-pcm",
             "Content-Type": "application/ssml+xml",
             "Authorization": `Bearer ${tts_token}`,
             "User-Agent": "1",
         },
-        body: `<speak version='1.0' xml:lang='en-US'>
-    <voice name="zh-CN-YunxiNeural">
-    ${response}
+        body: `<speak version="1.0" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="zh-CN">
+    <voice name="zh-CN-XiaoxiaoNeural">
+        <mstts:express-as style="customerservice" styledegree="1">
+		${response}
+        </mstts:express-as>
     </voice>
 </speak>`
     });
