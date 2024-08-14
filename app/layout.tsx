@@ -4,7 +4,6 @@ import { GeistMono } from "geist/font/mono";
 import clsx from "clsx";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
 	title: "AI小东",
@@ -31,7 +30,6 @@ export default function RootLayout({
 				</main>
 
 				<Toaster richColors theme="system" />
-				<Analytics />
 			</body>
 		</html>
 	);

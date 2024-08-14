@@ -5,7 +5,6 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { EnterIcon, LoadingIcon } from "@/lib/icons";
 import { usePlayer } from "@/lib/usePlayer";
-import { track } from "@vercel/analytics";
 import { useMicVAD, utils } from "@ricky0123/vad-react";
 
 type Message = {
@@ -78,10 +77,8 @@ export default function Home() {
 
 		if (typeof data === "string") {
 			formData.append("input", data);
-			track("Text input");
 		} else {
 			formData.append("input", data, "audio.wav");
-			track("Speech input");
 		}
 
 		for (const message of prevMessages) {
